@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, session } = require('electron');
+const { app, BrowserWindow, session, Notification } = require('electron');
 const { type } = require('os');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -41,7 +41,7 @@ function startBrowser() {
                     let args = msg.config;
                     let w = args.w != undefined ? args.w : 1024;
                     let h = args.h != undefined ? args.h : 768;
-                    let userAgent = args.userAgent != undefined ? args.userAgent : 'Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0';
+                    let userAgent = args.userAgent != undefined ? args.userAgent : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.7339.41 Safari/537.36';
                     console.log(userAgent, args.userAgent)
                     mainWindow.webContents.setUserAgent(userAgent);
                     mainWindow.setSize(w, h);
@@ -112,11 +112,13 @@ function startBrowser() {
     })
 }
 
-console.log("userData", process.argv[1]);
-app.setPath("userData", process.argv[1]);
-
-// TestCase
-// app.setPath("userData", "c:\\devel\\udata");
+if ((process.argv.length <= 1) || (process.argv[1]=='--enable-logging')) {
+  console.error("Error - no parameters provided");
+  app.quit();
+} else {
+    console.log("userData", process.argv[1]);
+    app.setPath("userData", process.argv[1]);
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
